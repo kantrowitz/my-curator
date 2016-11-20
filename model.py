@@ -289,8 +289,10 @@ class DisplayItem(Base):
     def get_all_items(cls):
         items = {}
         items['a'] = 'b'
-
-        return json.load(items)
+        set_trace()
+        items_string = json.dumps(items)
+        json_dict = json.loads(items_string)
+        return items_string
 
 
 
