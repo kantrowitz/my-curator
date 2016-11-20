@@ -252,7 +252,26 @@ class MediaResource(Base):
     id = Column(Integer, primary_key=True)
     display_item_id = Column(Integer, ForeignKey('display_items.id'), index=True, nullable=False)
 
+    # The name / title that identifies the media resource.
+    title = Column(Unicode)
 
+    # A snippet of text from the curator to contribute to the broader story.
+    snippet = Column(Unicode)
+
+    # The human-readable URL where this information can be found
+    direct_url = Column(Unicode)
+
+    # A longer description of the item (from the source)
+    description = Column(Unicode)
+
+    @property
+    def json(self):
+        return dict(
+            title=self.title,
+            snippet=self.snippet,
+            description=self.description,
+            url=self.direct_url
+        )
 
 class FulfillmentInfo(object):
     """A record of an attempt to download a media object. """
