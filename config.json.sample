@@ -1,15 +1,4 @@
 {
-    "links" : {
-        "terms_of_service" : "http://www.eula.org/",
-        "privacy_policy" : "http://www.privacy.org/",
-        "copyright" : "http://www.copyright.org/"
-    },
-
-    "logging" : {
-        "level" : "DEBUG",
-        "output" : "loggly"
-    },
-
     "integrations" : {
 
         "Postgres" : {

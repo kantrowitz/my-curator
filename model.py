@@ -1,77 +1,36 @@
 import contextlib
 import json
 import logging # Make sure logging is set up properly.
+import os
+import warnings
 
 from nose.tools import set_trace
 
-import os
-
-from sqlalchemy.engine.url import URL
+from sqlalchemy.orm.session import Session
+# from sqlalchemy.engine.url import URL
 from sqlalchemy import exc as sa_exc
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import (
-    backref,
-    defer,
     relationship,
     sessionmaker,
-)
-from sqlalchemy import (
-    func,
-    or_,
-    MetaData,
-    Table,
-)
-from sqlalchemy.sql import select
-from sqlalchemy.orm import (
-    aliased,
-    backref,
-    defer,
-    contains_eager,
-    joinedload,
-    lazyload,
 )
 from sqlalchemy.orm.exc import (
     NoResultFound,
     MultipleResultsFound,
 )
-from sqlalchemy.ext.mutable import (
-    MutableDict,
-)
 from sqlalchemy.ext.associationproxy import (
     association_proxy,
-)
-from sqlalchemy.ext.hybrid import hybrid_property
-from sqlalchemy.sql.functions import func
-from sqlalchemy.sql.expression import (
-    cast,
-    and_,
-    or_,
-    select,
-    join,
-    literal_column,
-    case,
-    table,
 )
 from sqlalchemy.exc import (
     IntegrityError
 )
 from sqlalchemy import (
-    create_engine, 
-    Binary,
-    Boolean,
+    create_engine,
     Column,
-    Date,
-    DateTime,
-    Enum,
-    Float,
     ForeignKey,
     Integer,
-    Index,
-    Numeric,
     String,
-    Table,
     Unicode,
-    UniqueConstraint,
 )
 
 
@@ -238,8 +197,6 @@ class Configuration(object):
 
         return result
 
-
-
 class ItemCollection(Base):
     """ Linker for many-to-many relationship between display items and their 
     associated collection (curated experiences). """
@@ -260,8 +217,8 @@ class Collection(Base):
     """ A curated experience, involving a bunch of items.  """
     __tablename__ = 'collections'
     id = Column(Integer, primary_key=True)
-    name = Column(String)
-    curator = Column(String)
+    name = Column(Unicode)
+    curator = Column(Unicode)
     items = association_proxy('item_collections', 'display_item')
     item_collections = relationship("ItemCollection", backref="collection", cascade="all, delete, delete-orphan")
 
@@ -304,7 +261,26 @@ class MediaResource(Base):
     id = Column(Integer, primary_key=True)
     display_item_id = Column(Integer, ForeignKey('display_items.id'), index=True, nullable=False)
 
+    # The name / title that identifies the media resource.
+    title = Column(Unicode)
 
+    # A snippet of text from the curator to contribute to the broader story.
+    snippet = Column(Unicode)
+
+    # The human-readable URL where this information can be found
+    direct_url = Column(Unicode)
+
+    # A longer description of the item (from the source)
+    description = Column(Unicode)
+
+    @property
+    def json(self):
+        return dict(
+            title=self.title,
+            snippet=self.snippet,
+            description=self.description,
+            url=self.direct_url
+        )
 
 class FulfillmentInfo(object):
     """A record of an attempt to download a media object. """
@@ -364,10 +340,6 @@ class SessionManager(object):
         return engine, engine.connect()
 
     @classmethod
-    def refresh_materialized_views(self, _db):
-        pass
-
-    @classmethod
     def session(cls, url):
         engine = connection = 0
         with warnings.catch_warnings():
@@ -381,13 +353,3 @@ class SessionManager(object):
     @classmethod
     def initialize_data(cls, session):
         pass
-
-
-
-
-
-
-
-
-
-
