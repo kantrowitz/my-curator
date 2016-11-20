@@ -285,6 +285,13 @@ class DisplayItem(Base):
     collections = association_proxy('item_collections', 'collection', creator=ItemCollection.from_collection)
     item_collections = relationship("ItemCollection", backref="display_item", cascade="all, delete, delete-orphan")
 
+    @classmethod
+    def get_all_items(cls):
+        items = {}
+        items['a'] = 'b'
+
+        return json.load(items)
+
 
 
 class MediaResource(Base):
