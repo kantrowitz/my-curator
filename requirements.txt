@@ -5,3 +5,4 @@ nose
 loggly-python-handler
 mock
 psycopg2
+gunicorn==19.6.0

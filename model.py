@@ -83,6 +83,9 @@ Make postgres database with something like:
 CREATE USER amnh_user with password 'test';
 simplified_circulation_dev=# create database my_curator_test;
 simplified_circulation_dev=# grant all privileges on database my_curator_test to amnh_user;
+
+heroku passwd: amnh_user:abc@
+https://amnh-curator.herokuapp.com/ | https://git.heroku.com/amnh-curator.git
 '''
 
 def production_session():
@@ -371,7 +374,7 @@ class SessionManager(object):
         pass
 
 
-        
+
 
 
 
