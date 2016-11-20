@@ -185,30 +185,7 @@ class MockRequestsResponse(object):
 
 class DisplayItemTest(DatabaseTest):
 
-    def setup(self):
-        super(DisplayItemTest, self).setup()
-
-        #self.api = MockOneClickAPI.from_config(self._db)
-        #base_path = os.path.split(__file__)[0]
-        #self.resource_path = os.path.join(base_path, "files", "oneclick")
-
-        #self.default_patron = self._patron(external_identifier="oneclick_testuser")
-        #self.default_patron.authorization_identifier="13057226"
-
-    '''
-    def get_data(self, filename):
-        # returns contents of sample file as string and as dict
-        path = os.path.join(self.resource_path, filename)
-        data = open(path).read()
-        return data, json.loads(data)
-    '''
-
-
     def test_create_item(self):
-        #datastr, datadict = self.get_data("response_patron_internal_id_not_found.json")
-        #self.api.queue_response(status_code=200, content=datastr)
-        #oneclick_patron_id = self.api.get_patron_internal_id(patron_cardno='9305722621')
-
         beet_beacon_major_id = '65370'
         beet_beacon_minor_id = '49339'
         beet_beacon_title = 'Beet Beacon'

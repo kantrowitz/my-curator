@@ -243,15 +243,31 @@ class DisplayItem(Base):
     item_collections = relationship("ItemCollection", backref="display_item", cascade="all, delete, delete-orphan")
 
     @classmethod
-    def get_all_items(cls):
-        items = {}
-        items['a'] = 'b'
-        set_trace()
-        items_string = json.dumps(items)
-        json_dict = json.loads(items_string)
-        return items_string
+    def all(cls, db):
+        items = [i.info for i in db.query(cls)]
+        json = dict(items=items)
+        return json
 
+    @property
+    def info(self):
+        return dict(
+            title=self.title,
+            major=self.beacon_major_id,
+            minor=self.beacon_minor_id,
+            image=self.cover_image,
+        )
 
+    @property
+    def json(self):
+        resources = self.media_resources
+        for collection in self.collections:
+            other_items = [i for i in collection.display_items if i != self]
+            for item in other_items:
+                resources.extend(item.resources)
+        resources = [r.json for r in resources]
+        json = self.info
+        json['resources'] = resources
+        return json
 
 class MediaResource(Base):
     """
